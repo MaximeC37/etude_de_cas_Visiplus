@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
 
 const userSchema = Schema({
@@ -13,10 +12,6 @@ const userSchema = Schema({
     type: String,
     required: true,
     unique: true,
-    /* validate: {
-      validator: isEmail,
-      message: (props) => `${props.value} is not correct`,
-    },*/
   },
   date: {
     type: Date,
@@ -24,22 +19,13 @@ const userSchema = Schema({
   },
   role: {
     type: String,
-    //enum: ["admin", "member"],
     enum: {
-      values: ["admin", "member"],
+      values: ["admin", "user"],
       message: "{VALUE} inconnue",
     },
   },
   age: Number,
 });
-
-/*userSchema.pre('save', function() {
-  if (!this.email) {
-    const error = new Error('mon message')
-    next(error)
-  }
-  next()
-}) */
 
 userSchema.pre("save", async function () {
   this.email = this.email.toLowerCase();
